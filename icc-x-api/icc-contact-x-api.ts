@@ -944,14 +944,14 @@ export class IccContactXApi extends iccContactApi {
 
   service() {
     return {
-      newInstance: (user: models.UserDto, s: any) =>
+      newInstance: (user: models.UserDto, s: any, responsibleId?: string) =>
         _.extend(
           {
             id: this.crypto.randomUuid(),
             _type: "org.taktik.icure.entities.embed.Service",
             created: new Date().getTime(),
             modified: new Date().getTime(),
-            responsible: user.healthcarePartyId || user.patientId,
+            responsible: responsibleId || user.healthcarePartyId || user.patientId,
             author: user.id,
             codes: [],
             tags: [],
