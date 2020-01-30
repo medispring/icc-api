@@ -1,5 +1,23 @@
 /* tslint:disable:quotemark indent ter-indent */
 
+/*
+ICC-API web worker PoC.
+
+Usage: this should be compiled using the webpack config at the top level of this
+repository. It creates a single file, icc-api.worker.js, which can be placed in
+the static files of a front-end app and used with the standard browser web
+worker API.
+
+Two types of payload are supported:
+ - ["rsa", rsaKeyChainObject] which populates local storage for the RSA module,
+   where rsaKeyChainObject maps localStorage rsa-related keys to the
+   corresponding localStorage values.
+ - An array containing arguments for
+   iccContactXApi.findByHCPartyPatientSecretFKeys, in which case the worker
+   emits the value from the returned Promise as soon as it resolves. There is no
+   error handling for this PoC.
+*/
+
 import { IccContactXApi } from "./icc-contact-x-api"
 import { IccCryptoXApi } from "./icc-crypto-x-api"
 import { iccHcpartyApi, iccPatientApi } from "../icc-api/iccApi"
