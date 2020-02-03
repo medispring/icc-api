@@ -55,17 +55,14 @@ const contactApi = new IccContactXApi(host, headers, cryptoApi, ctx.fetch)
 
 ctx.onmessage = function({ data: payload }: any) {
   console.debug("received payload", payload)
-  if (Array.isArray(payload) && payload[0] === "rsa") {
+  const [method, ...args] = payload
+  if (method === "rsa") {
     console.debug("filling up localStorage stub")
-    ctx.localStorage._store = payload[1]
+    ctx.localStorage._store = args[0]
   } else {
+    /* Send decrypted contacts to main threads asynchronously. PoC; no error handling. */
     console.debug("requesting and decrypting contacts")
-    sendCtcs(payload)
+    const returnPromise: Promise<any> = (contactApi as any)[method].apply(contactApi, args)
+    returnPromise.then(ret => ctx.postMessage(ret))
   }
-}
-
-/** Send decrypted contacts to main threads asynchronously. PoC; no error handling. */
-function sendCtcs(payload: any) {
-  const ctcsPromise = contactApi.findByHCPartyPatientSecretFKeys.apply(contactApi, payload)
-  ctcsPromise.then((ctcs: any) => ctx.postMessage(ctcs))
 }
