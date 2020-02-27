@@ -13,7 +13,6 @@ import {
 
 import { iccPatientApi, iccEntityrefApi, iccBeKmehrApi } from "../icc-api/iccApi"
 
-import fetch from "node-fetch"
 import * as WebCrypto from "node-webcrypto-ossl"
 import { UserDto } from "../icc-api/model/UserDto"
 
@@ -35,7 +34,7 @@ export class Api {
 
   constructor(
     host: string,
-    headers: { [key: string]: string },
+    headers: { []: string },
     fetchImpl: (input: RequestInfo, init?: RequestInit) => Promise<Response>
   ) {
     this._currentUser = null
