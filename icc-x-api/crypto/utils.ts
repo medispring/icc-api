@@ -1,3 +1,4 @@
+import { TextDecoder, TextEncoder } from "text-encoding"
 import * as base64js from "base64-js"
 import * as moment from "moment"
 import { Moment } from "moment"
