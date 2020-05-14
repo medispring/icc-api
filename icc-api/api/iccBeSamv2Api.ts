@@ -290,4 +290,16 @@ export class iccBeSamv2Api {
       .then(doc => new models.VmpPaginatedList(doc.body as JSON))
       .catch(err => this.handleError(err))
   }
+  getVersion(): Promise<models.SamVersion | any> {
+    let _body = null
+
+    const _url = this.host + "/be_samv2/v" + "?ts=" + new Date().getTime()
+    let headers = this.headers
+    headers = headers
+      .filter(h => h.header !== "Content-Type")
+      .concat(new XHR.Header("Content-Type", "application/json"))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc => new models.SamVersion(doc.body as JSON))
+      .catch(err => this.handleError(err))
+  }
 }
