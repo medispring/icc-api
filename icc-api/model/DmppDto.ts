@@ -32,6 +32,8 @@ export class DmppDto {
 
   to?: number
 
+  productId?: string
+
   deliveryEnvironment?: DmppDto.DeliveryEnvironmentEnum
 
   code?: string
