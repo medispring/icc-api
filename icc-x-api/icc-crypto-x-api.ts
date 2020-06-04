@@ -1358,28 +1358,6 @@ export class IccCryptoXApi {
     }
   }
 
-  saveKeyChainInHCPFromLocalStorage(hcpId: string): Promise<HealthcarePartyDto> {
-    return this.hcpartyBaseApi
-      .getHealthcareParty(hcpId)
-      .then(hcp => {
-        const opts = hcp.options || {}
-
-        const crt = this.getKeychainInBrowserLocalStorageAsBase64(hcp.id!!)
-        _.set(opts, this.hcpPreferenceKeyEhealthCert, crt)
-
-        const crtValidityDate = this.getKeychainValidityDateInBrowserLocalStorage(hcp.id!!)
-        if (!!crtValidityDate) {
-          _.set(opts, this.hcpPreferenceKeyEhealthCertDate, crtValidityDate)
-        }
-
-        hcp.options = opts
-        return hcp
-      })
-      .then(hcp => {
-        return this.hcpartyBaseApi.modifyHealthcareParty(hcp)
-      })
-  }
-
   importKeychainInBrowserFromHCP(hcpId: string): Promise<void> {
     return this.hcpartyBaseApi.getHealthcareParty(hcpId).then(hcp => {
       const crt = _.get(hcp.options, this.hcpPreferenceKeyEhealthCert)
@@ -1412,11 +1390,9 @@ export class IccCryptoXApi {
         return this.importKeychainInBrowserFromHCP(hcp.id!!)
           .then(() => true)
           .catch(() => false)
-      } else {
-        return this.saveKeyChainInHCPFromLocalStorage(hcp.id!!)
-          .then(() => true)
-          .catch(() => false)
       }
+
+      return false
     })
   }
 
