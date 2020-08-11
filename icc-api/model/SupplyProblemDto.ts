@@ -24,9 +24,9 @@
 
 import * as models from "./models"
 
-export class CommercializationDto {
+export class SupplyProblemDto {
   constructor(json: JSON | any) {
-    Object.assign(this as CommercializationDto, json)
+    Object.assign(this as SupplyProblemDto, json)
   }
   from?: number
 
@@ -34,7 +34,7 @@ export class CommercializationDto {
 
   reason?: models.SamTextDto
 
-  endOfComercialization?: models.SamTextDto
+  expectedEndOn?: number
 
   impact?: models.SamTextDto
 

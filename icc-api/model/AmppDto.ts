@@ -94,6 +94,8 @@ export class AmppDto {
 
   commercializations?: Array<models.CommercializationDto>
 
+  supplyProblems?: Array<models.SupplyProblemDto>
+
   dmpps?: Array<models.DmppDto>
 
   orphan?: boolean

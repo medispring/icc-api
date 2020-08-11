@@ -30,6 +30,8 @@ export class SamVersion {
   }
   version?: string
 
+  date?: number
+
   attachments?: { [key: string]: models.Attachment }
 
   deleted?: number
