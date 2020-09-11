@@ -215,6 +215,27 @@ export class iccBeSamv2Api {
       .then(doc => new models.AmpPaginatedList(doc.body as JSON))
       .catch(err => this.handleError(err))
   }
+  findPaginatedVmpGroups(
+    startDocumentId?: string,
+    limit?: number
+  ): Promise<models.VmpGroupPaginatedList | any> {
+    let _body = null
+
+    const _url =
+      this.host +
+      "/be_samv2/vmpgroup/all" +
+      "?ts=" +
+      new Date().getTime() +
+      (startDocumentId ? "&startDocumentId=" + startDocumentId : "") +
+      (limit ? "&limit=" + limit : "")
+    let headers = this.headers
+    headers = headers
+      .filter(h => h.header !== "Content-Type")
+      .concat(new XHR.Header("Content-Type", "application/json"))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc => new models.VmpGroupPaginatedList(doc.body as JSON))
+      .catch(err => this.handleError(err))
+  }
   findPaginatedVmpGroupsByLabel(
     language?: string,
     label?: string,

@@ -64,6 +64,8 @@ export class AmppDto {
 
   deliveryModusSpecification?: models.SamTextDto
 
+  dhpcLink?: models.SamText
+
   distributorCompany?: models.CompanyDto
 
   speciallyRegulated?: number
@@ -98,9 +100,9 @@ export class AmppDto {
 
   dmpps?: Array<models.DmppDto>
 
-  orphan?: boolean
-
   singleUse?: boolean
+
+  orphan?: boolean
 }
 export namespace AmppDto {
   export enum StatusEnum {
