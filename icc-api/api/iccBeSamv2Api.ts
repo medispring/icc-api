@@ -263,6 +263,30 @@ export class iccBeSamv2Api {
       .then(doc => new models.VmpGroupPaginatedList(doc.body as JSON))
       .catch(err => this.handleError(err))
   }
+  findPaginatedVmpGroupsByVmpGroupCode(
+    vmpgCode: string,
+    startKey?: string,
+    startDocumentId?: string,
+    limit?: number
+  ): Promise<models.VmpGroupPaginatedList | any> {
+    let _body = null
+
+    const _url =
+      this.host +
+      "/be_samv2/vmpgroup/byGroupCode/{vmpgCode}".replace("{vmpgCode}", vmpgCode + "") +
+      "?ts=" +
+      new Date().getTime() +
+      (startKey ? "&startKey=" + startKey : "") +
+      (startDocumentId ? "&startDocumentId=" + startDocumentId : "") +
+      (limit ? "&limit=" + limit : "")
+    let headers = this.headers
+    headers = headers
+      .filter(h => h.header !== "Content-Type")
+      .concat(new XHR.Header("Content-Type", "application/json"))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc => new models.VmpGroupPaginatedList(doc.body as JSON))
+      .catch(err => this.handleError(err))
+  }
   findPaginatedVmpsByGroupCode(
     vmpgCode: string,
     startKey?: string,
@@ -327,6 +351,30 @@ export class iccBeSamv2Api {
       new Date().getTime() +
       (language ? "&language=" + language : "") +
       (label ? "&label=" + label : "") +
+      (startKey ? "&startKey=" + startKey : "") +
+      (startDocumentId ? "&startDocumentId=" + startDocumentId : "") +
+      (limit ? "&limit=" + limit : "")
+    let headers = this.headers
+    headers = headers
+      .filter(h => h.header !== "Content-Type")
+      .concat(new XHR.Header("Content-Type", "application/json"))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc => new models.VmpPaginatedList(doc.body as JSON))
+      .catch(err => this.handleError(err))
+  }
+  findPaginatedVmpsByVmpCode(
+    vmpCode: string,
+    startKey?: string,
+    startDocumentId?: string,
+    limit?: number
+  ): Promise<models.VmpPaginatedList | any> {
+    let _body = null
+
+    const _url =
+      this.host +
+      "/be_samv2/vmp/byVmpCode/{vmpCode}".replace("{vmpCode}", vmpCode + "") +
+      "?ts=" +
+      new Date().getTime() +
       (startKey ? "&startKey=" + startKey : "") +
       (startDocumentId ? "&startDocumentId=" + startDocumentId : "") +
       (limit ? "&limit=" + limit : "")
