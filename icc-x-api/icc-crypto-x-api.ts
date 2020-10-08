@@ -1428,7 +1428,7 @@ export class IccCryptoXApi {
         if (!!aesKey && !!crt) {
           let crtEncrypted: ArrayBuffer | null = null
           try {
-            crtEncrypted = await this.AES.encrypt(aesKey, new Uint8Array(utils.text2ua(atob(crt))))
+            crtEncrypted = await this.AES.encrypt(aesKey, new Uint8Array(utils.text2ua(crt)))
           } catch (e) {
             console.error("Error while encrypting the certificate", e)
           }
@@ -1458,7 +1458,7 @@ export class IccCryptoXApi {
     return this.hcpartyBaseApi.getHealthcareParty(hcpId).then(async (hcp: HealthcarePartyDto) => {
       let crtCryp: Uint8Array | null = null
       if (!!hcp.options && !!hcp.options[this.hcpPreferenceKeyEhealthCertEncrypted]) {
-        crtCryp = this.utils.text2ua(hcp.options[this.hcpPreferenceKeyEhealthCertEncrypted])
+        crtCryp = this.utils.text2ua(btoa(hcp.options[this.hcpPreferenceKeyEhealthCertEncrypted]))
       }
 
       const crtValidityDate = _.get(hcp.options, this.hcpPreferenceKeyEhealthCertDate)
