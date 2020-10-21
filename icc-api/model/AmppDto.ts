@@ -32,6 +32,8 @@ export class AmppDto {
 
   to?: number
 
+  index?: number
+
   ctiExtended?: string
 
   leafletLink?: models.SamTextDto
