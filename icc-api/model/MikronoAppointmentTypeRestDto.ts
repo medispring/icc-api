@@ -28,6 +28,7 @@ export class MikronoAppointmentTypeRestDto {
   constructor(json: JSON | any) {
     Object.assign(this as MikronoAppointmentTypeRestDto, json)
   }
+
   color?: string
 
   durationInMinutes?: number

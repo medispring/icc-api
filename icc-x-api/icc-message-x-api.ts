@@ -1,10 +1,18 @@
-import { iccEntityrefApi, iccInsuranceApi, iccMessageApi } from "../icc-api/iccApi"
-import { IccCryptoXApi } from "./icc-crypto-x-api"
-import { IccDocumentXApi } from "./icc-document-x-api"
-import { IccInvoiceXApi } from "./icc-invoice-x-api"
-
+import {
+  DmgClosure,
+  DmgExtension,
+  DmgsList,
+  EfactMessage,
+  EfactSendResponse,
+  ErrorDetail,
+  GenAsyncResponse,
+  HcpartyType,
+  IDHCPARTY,
+  fhcEfactApi
+} from "fhc-api"
 import * as _ from "lodash"
 import * as moment from "moment"
+import { iccEntityrefApi, iccInsuranceApi, iccMessageApi } from "../icc-api/iccApi"
 import * as models from "../icc-api/model/models"
 import {
   EntityReference,
@@ -21,18 +29,12 @@ import {
   ReferralPeriod,
   UserDto
 } from "../icc-api/model/models"
-import {
-  decodeBase36Uuid,
-  getFederaton,
-  InvoiceWithPatient,
-  toInvoiceBatch,
-  uuidBase36,
-  uuidBase36Half
-} from "./utils/efact-util"
-import { timeEncode } from "./utils/formatting-util"
-import { fhcEfactApi, EfactSendResponse } from "fhc-api"
 import { utils } from "./crypto/utils"
-import { EfactMessage } from "fhc-api"
+import { IccCryptoXApi } from "./icc-crypto-x-api"
+import { IccDocumentXApi } from "./icc-document-x-api"
+import { IccInvoiceXApi } from "./icc-invoice-x-api"
+import { IccPatientXApi } from "./icc-patient-x-api"
+import { IccReceiptXApi } from "./icc-receipt-x-api"
 import {
   EfactMessage920098Reader,
   EfactMessage920099Reader,
@@ -46,15 +48,15 @@ import {
   ET92Data,
   File920900Data
 } from "./utils/efact-parser"
-import { ErrorDetail } from "fhc-api"
-import { IccReceiptXApi } from "./icc-receipt-x-api"
-import { DmgsList } from "fhc-api"
-import { DmgClosure } from "fhc-api"
-import { DmgExtension } from "fhc-api"
-import { IccPatientXApi } from "./icc-patient-x-api"
-import { HcpartyType } from "fhc-api"
-import { IDHCPARTY } from "fhc-api"
-import { GenAsyncResponse } from "fhc-api"
+import {
+  decodeBase36Uuid,
+  getFederaton,
+  InvoiceWithPatient,
+  toInvoiceBatch,
+  uuidBase36,
+  uuidBase36Half
+} from "./utils/efact-util"
+import { timeEncode } from "./utils/formatting-util"
 
 interface StructError {
   itemId: string | null
@@ -679,8 +681,9 @@ export class IccMessageXApi extends iccMessageApi {
     invoicePrefix?: string,
     invoicePrefixer?: (invoice: InvoiceDto, hcpId: string) => Promise<string>
   ): Promise<{ message: MessageDto; invoices: Array<InvoiceDto> }> {
-    const ref = Number(efactMessage.commonOutput!!.inputReference!!) % 10000000000
-
+    const ref = efactMessage.commonOutput!!.inputReference
+      ? Number(efactMessage.commonOutput!!.inputReference) % 10000000000
+      : Number(efactMessage.commonOutput!!.outputReference!!.replace(/\D+/g, "")) % 10000000000
     return this.findMessagesByTransportGuid(
       "EFACT:BATCH:" + ref,
       false,
