@@ -24,6 +24,7 @@
 
 import { XHR } from "./XHR"
 import * as models from "../model/models"
+import { MikronoAppointmentTypeRestDto } from "../model/models"
 
 export class iccBeMikronoApi {
   host: string
@@ -89,7 +90,8 @@ export class iccBeMikronoApi {
   }
   createAppointmentTypes(
     body?: Array<models.MikronoAppointmentTypeRestDto>
-  ): Promise<Array<models.MikronoAppointmentTypeRestDto> | any> {
+  ): Promise<any | Boolean> {
+    // FIXME: genloc: Promise<Array<models.MikronoAppointmentTypeRestDto> | any>
     let _body = null
     _body = body
 
@@ -99,9 +101,7 @@ export class iccBeMikronoApi {
       .filter(h => h.header !== "Content-Type")
       .concat(new XHR.Header("Content-Type", "application/json"))
     return XHR.sendCommand("POST", _url, headers, _body, this.fetchImpl)
-      .then(doc =>
-        (doc.body as Array<JSON>).map(it => new models.MikronoAppointmentTypeRestDto(it))
-      )
+      .then(doc => true) //FIXME: genloc: doc => (doc.body as Array<JSON>).map(it => new models.MikronoAppointmentTypeRestDto(it))
       .catch(err => this.handleError(err))
   }
   createAppointments(
@@ -137,7 +137,8 @@ export class iccBeMikronoApi {
       .then(doc => true)
       .catch(err => this.handleError(err))
   }
-  register(userId: string, body?: models.MikronoCredentialsDto): Promise<models.UserDto | any> {
+  register(userId: string, body?: models.MikronoCredentialsDto): Promise<any | Boolean> {
+    // FIXME: genloc: Promise<models.UserDto | any>
     let _body = null
     _body = body
 
@@ -151,7 +152,7 @@ export class iccBeMikronoApi {
       .filter(h => h.header !== "Content-Type")
       .concat(new XHR.Header("Content-Type", "application/json"))
     return XHR.sendCommand("PUT", _url, headers, _body, this.fetchImpl)
-      .then(doc => new models.UserDto(doc.body as JSON))
+      .then(doc => true) // FIXME: genloc: doc => new models.UserDto(doc.body as JSON)
       .catch(err => this.handleError(err))
   }
   sendMessage(body?: models.EmailOrSmsMessageDto): Promise<any | Boolean> {
