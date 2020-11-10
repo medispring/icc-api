@@ -32,6 +32,8 @@ export class AmppDto {
 
   to?: number
 
+  index?: number
+
   ctiExtended?: string
 
   leafletLink?: models.SamTextDto
@@ -99,6 +101,8 @@ export class AmppDto {
   supplyProblems?: Array<models.SupplyProblemDto>
 
   dmpps?: Array<models.DmppDto>
+
+  vaccineIndicationCodes?: Array<string>
 
   singleUse?: boolean
 
