@@ -164,6 +164,20 @@ export class iccUserApi {
       .then(doc => new models.UserDto(doc.body as JSON))
       .catch(err => this.handleError(err))
   }
+  /**
+   * Get current user.
+   * @summary Get presently logged-in user.
+   */
+  getMatchingUsers(): Promise<void | Array<models.UserGroupDto>> {
+    let _body = null
+
+    const _url = this.host + `/user/matches` + "?ts=" + new Date().getTime()
+    let headers = this.headers
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc => (doc.body as Array<JSON>).map(it => new models.UserGroupDto(it)))
+      .catch(err => this.handleError(err))
+  }
+
   getUser(userId: string): Promise<models.UserDto | any> {
     let _body = null
 
