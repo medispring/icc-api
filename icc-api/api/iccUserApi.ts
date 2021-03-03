@@ -87,6 +87,17 @@ export class iccUserApi {
       .then(doc => (doc.body as Array<JSON>).map(it => JSON.parse(JSON.stringify(it))))
       .catch(err => this.handleError(err))
 }
+  encodePassword(password?: string): Promise<boolean | any> {
+    let _body = null
+    
+    const _url = this.host + "/user/encodePassword" + "?ts=" + new Date().getTime() 
+    let headers = this.headers
+    headers = headers.filter(h => h.header !== "Content-Type").concat(new XHR.Header("Content-Type", "application/json"))
+        password && (headers = headers.concat(new XHR.Header("password", password)))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc =>  JSON.parse(JSON.stringify(doc.body)))
+      .catch(err => this.handleError(err))
+}
   findByHcpartyId(id: string): Promise<Array<string> | any> {
     let _body = null
     
@@ -130,12 +141,10 @@ export class iccUserApi {
 }
   getMatchingUsers(): Promise<Array<models.UserDto> | any> {
     let _body = null
-
-    const _url = this.host + "/user/matches" + "?ts=" + new Date().getTime()
+    
+    const _url = this.host + "/user/matches" + "?ts=" + new Date().getTime() 
     let headers = this.headers
-    headers = headers
-      .filter(h => h.header !== "Content-Type")
-      .concat(new XHR.Header("Content-Type", "application/json"))
+    headers = headers.filter(h => h.header !== "Content-Type").concat(new XHR.Header("Content-Type", "application/json"))
     return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
       .then(doc => (doc.body as Array<JSON>).map(it => new models.UserDto(it)))
       .catch(err => this.handleError(err))

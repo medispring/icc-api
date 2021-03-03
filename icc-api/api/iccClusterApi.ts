@@ -25,7 +25,7 @@
 import { XHR } from "./XHR"
 import * as models from "../model/models"
 
-export class iccGroupApi {
+export class iccClusterApi {
   host: string
   headers: Array<XHR.Header>
   fetchImpl?: (input: RequestInfo, init?: RequestInit) => Promise<Response>
@@ -45,15 +45,14 @@ export class iccGroupApi {
     else throw Error("api-error" + e.status)
   }
 
-  createGroup(id: string, name?: string, password?: string, body?: models.ReplicationDto): Promise<models.GroupDto | any> {
+  groupSyncStatus(): Promise<models.CodePaginatedList | any> {
     let _body = null
-    _body = body
     
-    const _url = this.host + "/group/{id}".replace("{id}", id+"") + "?ts=" + new Date().getTime()  + (name ? "&name=" + name : "") + (password ? "&password=" + password : "")
+    const _url = this.host + "/cluster/gsyncs" + "?ts=" + new Date().getTime() 
     let headers = this.headers
     headers = headers.filter(h => h.header !== "Content-Type").concat(new XHR.Header("Content-Type", "application/json"))
-    return XHR.sendCommand("POST", _url, headers, _body, this.fetchImpl)
-      .then(doc =>  new models.GroupDto(doc.body as JSON))
+    return XHR.sendCommand("GET", _url, headers, _body, this.fetchImpl)
+      .then(doc =>  new models.CodePaginatedList(doc.body as JSON))
       .catch(err => this.handleError(err))
 }
 }
