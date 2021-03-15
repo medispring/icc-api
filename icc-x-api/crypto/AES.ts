@@ -73,21 +73,21 @@ export class AESUtils {
         iv: encryptedDataUnit8.subarray(0, this.ivLength)
 
         /*
-    * IF THIS BIT OF CODE PRODUCES A DOMEXCEPTION CODE 0 ERROR, IT MIGHT BE RELATED TO THIS:
-    *
-    * NOTOK:
-    * if (!hcparty.hcPartyKeys && !hcparty.hcPartyKeys[hcpartyId] && hcparty.hcPartyKeys[hcpartyId].length !== 2) {
-    *   throw 'No hcPartyKey for this Healthcare party(' + hcpartyId + ').';
-    * }
-    * var delegateHcPartyKey = hcparty.hcPartyKeys[hcpartyId][1];
-    *
-    * SHOULD BE:
-    * var delegatorId = patient.delegations[hcpartyId][0].owner;
-    * if (!hcparty.hcPartyKeys && !hcparty.hcPartyKeys[delegatorId] && hcparty.hcPartyKeys[delegatorId].length !== 2) {
-    *   throw 'No hcPartyKey for this Healthcare party(' + delegatorId + ').';
-    * }
-    * var delegateHcPartyKey = hcparty.hcPartyKeys[delegatorId][1];
-    */
+         * IF THIS BIT OF CODE PRODUCES A DOMEXCEPTION CODE 0 ERROR, IT MIGHT BE RELATED TO THIS:
+         *
+         * NOTOK:
+         * if (!hcparty.hcPartyKeys && !hcparty.hcPartyKeys[hcpartyId] && hcparty.hcPartyKeys[hcpartyId].length !== 2) {
+         *   throw 'No hcPartyKey for this Healthcare party(' + hcpartyId + ').';
+         * }
+         * var delegateHcPartyKey = hcparty.hcPartyKeys[hcpartyId][1];
+         *
+         * SHOULD BE:
+         * var delegatorId = patient.delegations[hcpartyId][0].owner;
+         * if (!hcparty.hcPartyKeys && !hcparty.hcPartyKeys[delegatorId] && hcparty.hcPartyKeys[delegatorId].length !== 2) {
+         *   throw 'No hcPartyKey for this Healthcare party(' + delegatorId + ').';
+         * }
+         * var delegateHcPartyKey = hcparty.hcPartyKeys[delegatorId][1];
+         */
       }
       this._debug && console.log(`decrypt with ${rawKey}`)
       this.crypto.subtle
@@ -116,12 +116,12 @@ export class AESUtils {
         const keyUsages = ["decrypt", "encrypt"]
         if (toHex === undefined || !toHex) {
           return this.crypto.subtle
-            .generateKey(this.aesKeyGenParams, extractable, keyUsages)
-            .then(resolve, reject)
+            .generateKey(this.aesKeyGenParams as any, extractable, keyUsages as any)
+            .then(resolve as any, reject)
         } else {
           return this.crypto.subtle
-            .generateKey(this.aesKeyGenParams, extractable, keyUsages)
-            .then(k => this.exportKey(k, "raw"), reject)
+            .generateKey(this.aesKeyGenParams as any, extractable, keyUsages as any)
+            .then(k => this.exportKey(k as any, "raw"), reject)
             .then(raw => resolve(utils.ua2hex(raw)), reject)
         }
       }
@@ -166,7 +166,7 @@ export class AESUtils {
       var extractable = true
       var keyUsages = ["decrypt", "encrypt"]
       return this.crypto.subtle
-        .importKey(format, aesKey, this.aesKeyGenParams.name, extractable, keyUsages)
+        .importKey(format, aesKey, this.aesKeyGenParams.name, extractable, keyUsages as any)
         .then(resolve, reject)
     })
   }

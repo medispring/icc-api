@@ -116,15 +116,16 @@ export class IccAccesslogXApi extends iccAccesslogApi {
   findBy(hcpartyId: string, patient: models.PatientDto) {
     return this.crypto
       .extractDelegationsSFKs(patient, hcpartyId)
-      .then(secretForeignKeys =>
-        secretForeignKeys &&
-        secretForeignKeys.extractedKeys &&
-        secretForeignKeys.extractedKeys.length > 0
-          ? this.findByHCPartyPatientSecretFKeys(
-              secretForeignKeys.hcpartyId!,
-              secretForeignKeys.extractedKeys.join(",")
-            )
-          : Promise.resolve([])
+      .then(
+        secretForeignKeys =>
+          secretForeignKeys &&
+          secretForeignKeys.extractedKeys &&
+          secretForeignKeys.extractedKeys.length > 0
+            ? this.findByHCPartyPatientSecretFKeys(
+                secretForeignKeys.hcpartyId!,
+                secretForeignKeys.extractedKeys.join(",")
+              )
+            : Promise.resolve([])
       )
   }
 
@@ -218,11 +219,10 @@ export class IccAccesslogXApi extends iccAccesslogApi {
   ): Promise<Array<models.AccessLogDto>> {
     return Promise.all(
       accessLogs.map(accessLog =>
-        (accessLog.encryptionKeys && Object.keys(accessLog.encryptionKeys).length
+        ((accessLog.encryptionKeys && Object.keys(accessLog.encryptionKeys).length
           ? Promise.resolve(accessLog)
-          : this.initEncryptionKeys(user, accessLog)
-        )
-          .then(accessLog =>
+          : this.initEncryptionKeys(user, accessLog)) as Promise<any>)
+          .then((accessLog: any) =>
             this.crypto.extractKeysFromDelegationsForHcpHierarchy(
               (user.healthcarePartyId || user.patientId)!,
               accessLog.id!,

@@ -424,11 +424,10 @@ export class IccContactXApi extends iccContactApi {
         ctc =>
           bypassEncryption //Prevent encryption for test ctc
             ? ctc
-            : (ctc.encryptionKeys && Object.keys(ctc.encryptionKeys || {}).length
+            : ((ctc.encryptionKeys && Object.keys(ctc.encryptionKeys || {}).length
                 ? Promise.resolve(ctc)
-                : this.initEncryptionKeys(user, ctc)
-              )
-                .then(ctc =>
+                : this.initEncryptionKeys(user, ctc)) as Promise<any>)
+                .then((ctc: any) =>
                   this.crypto.extractKeysFromDelegationsForHcpHierarchy(
                     hcpartyId,
                     ctc.id!,
@@ -765,7 +764,8 @@ export class IccContactXApi extends iccContactApi {
           (c.measureValue.value || c.measureValue.value === 0 ? c.measureValue.value : "-") +
           (c.measureValue.unit ? " " + c.measureValue.unit : "")) ||
       (c.medicationValue ? this.medication().medicationToString(c.medicationValue, lng) : null) ||
-      ((c.booleanValue && label) || "OK")
+      (c.booleanValue && label) ||
+      "OK"
     )
   }
 
